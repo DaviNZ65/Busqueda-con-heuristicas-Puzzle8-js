@@ -1,5 +1,4 @@
 #este algoritmo utiliza la busqueda bfs la cual hace el conteo de las fichas mal colocadas
-
 from Arbol import Nodo
 import copy
 
@@ -12,7 +11,7 @@ def busquedaHeuristica(einicio, efinal):
     nodoInicial = Nodo(einicio)
     nodosFrontera.append(nodoInicial)
     comparaciones = 0
-    while len(nodosFrontera) != 0 and (not exito):
+    while len(nodosFrontera)!= 0 and (not exito):
         # nodo es el nodoPadre inicialmente y  nodosFrontera llegaria a ser una cola por que saca el primero de la cola  y asi sucesivamente
         nodo = nodosFrontera.pop(0)
         nodosVisitados.append(nodo)
@@ -34,7 +33,7 @@ def busquedaHeuristica(einicio, efinal):
                 for j in range(y):
                     if aux[i][j] == 0:
                         fila = i
-                        columna = j
+                        columna = j  #
                         break
 
             nodos_hijos = []
@@ -52,6 +51,7 @@ def busquedaHeuristica(einicio, efinal):
                         nodos_hijos.append(nodoHijo)
 
             for hijo in nodos_hijos:
+                hijo.asignarPadre(nodo)
                 nodosFrontera.append(hijo)
 
     return None
@@ -67,26 +67,28 @@ def costeFichasMalColocadas(nodoOriginal, nodoHijo):
         for j in range(len(nodoOriginal[0])):
             if nodoOriginal[i][j] != nodoHijo[i][j]:
                 fichas_mal_colocadas += 1
+    
     return fichas_mal_colocadas
+    
 
-einicio = [[1, 2, 3], [4, 5, 6], [7, 0, 8]]
+einicio = [[1, 0, 3], [4, 2, 6], [7, 5, 8]]
 efinal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
 solucion = busquedaHeuristica(einicio, efinal)
-nivel = 0
-datosCamino = []
 nodo_aux = solucion
+datosCamino = []
 if solucion is None:
     print("Solucion no encontrada")
 else:
-    while nodo_aux.obtenerPadre() is not None:
+    while nodo_aux.obtenerPadre() != None:
         datosCamino.append(nodo_aux.obtenerDatos())
         lista = nodo_aux.obtenerDatos()
         nodo_aux = nodo_aux.obtenerPadre()
-    datosCamino.append(einicio)
+    datosCamino.append(einicio)  # Agrega el nodo inicial al camino
     datosCamino.reverse()
     print("El camino es: ")
-    for i in range(len(datosCamino)):
-        for j in range(len(datosCamino[0])):
-            print("\033[1;33m" + "[", datosCamino[i][j][0], ",", datosCamino[i][j][1], ",", datosCamino[i][j][2], "]" + '\033[0;m')
+    for estado in datosCamino:
+        for fila in estado:
+            print("\033[1;33m" + str(fila) + '\033[0;m')
         print(" ")
+
